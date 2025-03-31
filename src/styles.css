@@ -399,7 +399,7 @@ header.transparente nav a:hover {
 
 /* Paralax */
 .fila.parallax{
-    background-image: url('assets/img/property5.jpg');
+    background-image: url('assets/img/museo-rex.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
