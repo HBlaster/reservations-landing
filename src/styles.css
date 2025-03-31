@@ -480,7 +480,21 @@ input.usuario {
 }
 
 input.email {
-    background-image: url(assets/img/mail-bronce.svg);
+    background-image: url(assets/img/mail-bronce-nuevo.svg);
+    background-repeat: no-repeat;
+    background-position: 0 7px;
+    padding-left: 2em;
+}
+
+input.official_id{
+    background-image: url(assets/img/id-bronce-ajustado.svg);
+    background-repeat: no-repeat;
+    background-position: 0 7px;
+    padding-left: 2em;
+}
+
+input.calendar{
+    background-image: url(assets/img/calendar-bronce.svg);
     background-repeat: no-repeat;
     background-position: 0 7px;
     padding-left: 2em;
@@ -610,7 +624,7 @@ footer .copyright {
 
 /* Ficha de propiedad  */
 .propiedad {
-    background-image: url('assets/img/property5.jpg');
+    background-image: url('assets/img/muse-escaleras.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

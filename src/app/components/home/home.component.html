@@ -40,13 +40,13 @@
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias qui porro consequuntur esse, veniam vel!</p>
         </div>
         <div class="col-33">
-            <img src="assets/img/thumb4.jpg" alt="imagen casa">
+            <img src="assets/img/galery_couple.jpg" alt="imagen casa">
         </div>
         
     </div>
     <div class="fila" >
         <div class="col-50" >
-            <img src="assets/img/thumb5.jpg" alt="">
+            <img src="assets/img/galery_girl_two.jpg" alt="">
         </div>
         <div class="col-50" > 
             <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam debitis non nesciunt libero quidem molestiae est incidunt dolore excepturi esse voluptate vitae consequatur soluta porro voluptates, commodi tenetur amet cupiditate ea perspiciatis earum facere. Fugiat.</p>
@@ -62,21 +62,31 @@
             <p>
                 Reserva tu visita
             </p>
-            <form class="contacto">
+            <form [formGroup]="contactoForm" (ngSubmit)="onSubmit()" class="contacto">
                 <div class="fila">
-                    <input class="usuario" type="text" placeholder="Nombre y apellidos">
+                  <input class="usuario" type="text" formControlName="usuario" placeholder="Nombre y apellidos">
                 </div>
                 <div class="fila">
-                    <input class="email" type="email" placeholder="Correo electronico">
+                  <input class="email" type="email" formControlName="email" placeholder="Correo electronico">
+                </div>
+                <div class="fila">
+                  <input class="official_id" type="text" formControlName="official_id" placeholder="Identificación oficial">
+                </div>
+                <div class="fila">
+                  <input class="calendar" type="datetime-local" formControlName="calendar" placeholder="fecha">
                 </div>
                 <div class="fila flex-end">
-                    <button type="submit">Enviar</button>
+                  <button type="submit">Enviar</button>
                 </div>
+              
+                <!-- Si activas el checkbox, también debes agregar esto:
                 <div class="fila">
-                    <input type="checkbox" name=""   id="condiciones">
-                    <label for="condiciones"> Acepto las condiciones legales.</label>
+                  <input type="checkbox" id="condiciones" formControlName="condiciones">
+                  <label for="condiciones">Acepto las condiciones legales.</label>
                 </div>
-            </form>
+                -->
+              </form>
+              
         </div>
     </div>
     <footer class="fila">
