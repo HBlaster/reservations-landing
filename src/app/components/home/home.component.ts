@@ -45,7 +45,7 @@ export class HomeComponent {
   // }
   onSubmit(): void {
     if (this.contactoForm.valid) {
-      Swal.fire('✅ Éxito', 'Formulario enviado correctamente', 'success');
+      Swal.fire('Éxito', 'Formulario enviado correctamente', 'success');
       console.log(this.contactoForm.value);
     } else {
       let erroresHtml = '<ul>';
@@ -80,7 +80,7 @@ export class HomeComponent {
   
       Swal.fire({
         icon: 'error',
-        title: '❌ Errores en el formulario',
+        title: 'Errores en el formulario',
         html: erroresHtml
       });
     }
