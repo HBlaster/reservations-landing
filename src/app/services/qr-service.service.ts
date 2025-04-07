@@ -4,17 +4,14 @@ import { toDataURL } from 'qrcode';
 @Injectable({
   providedIn: 'root',
 })
-export class QrServiceService {
+export class QrService {
   constructor() {}
 
-  async generarQRDataURL(qrText: string): Promise<string> {
+  async generateQRDataURL(qrText: string): Promise<string> {
     return await toDataURL(qrText);
   }
 
-  async generarImagenCanvas(
-    qrImageUrl: string,
-    fecha: string
-  ): Promise<string> {
+  async generateCanvasImage(qrImageUrl: string, date: string): Promise<string> {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
     const width = 300;
@@ -24,27 +21,27 @@ export class QrServiceService {
     canvas.width = width;
     canvas.height = height;
 
-    // fondo blanco
+    // white background
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, width, height);
 
-    // título
+    // title
     ctx.fillStyle = '#000000';
     ctx.font = 'bold 20px Arial';
     ctx.textAlign = 'center';
     ctx.fillText('Acceso', width / 2, 40);
 
-    // cargar imagen QR
+    // load QR image
     const img = new Image();
     img.src = qrImageUrl;
     await img.decode();
     ctx.drawImage(img, (width - imgSize) / 2, 70, imgSize, imgSize);
 
-    // fecha
+    // date
     ctx.font = '14px Arial';
-    ctx.fillText(`Fecha del evento: ${fecha}`, width / 2, 260);
+    ctx.fillText(`Fecha del evento: ${date}`, width / 2, 260);
 
-    // instrucciones
+    // instructions
     ctx.font = '12px Arial';
     ctx.fillText('Este código valida tu reservación', width / 2, 290);
 

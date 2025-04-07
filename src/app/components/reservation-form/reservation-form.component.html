@@ -1,25 +1,42 @@
 <div class="fila">
-        <div class="col-100 flex-column-center">
-            <p>
-                Reserva tu visita
-            </p>
-            <form [formGroup]="contactoForm" (ngSubmit)="onSubmit()" class="contacto">
-                <div class="fila">
-                  <input class="usuario" type="text" formControlName="name" placeholder="Nombre y apellidos">
-                </div>
-                <div class="fila">
-                  <input class="email" type="email" formControlName="email" placeholder="Correo electronico">
-                </div>
-                <div class="fila">
-                  <input class="official_id" type="text" formControlName="OfficialId" placeholder="Identificación oficial">
-                </div>
-                <div class="fila">
-                  <input class="calendar" type="datetime-local" formControlName="reservationDay" placeholder="fecha">
-                </div>
-                <div class="fila flex-end">
-                  <button type="submit">Enviar</button>
-                </div>
-              </form>
-              
-        </div>
-    </div>
+  <div class="col-100 flex-column-center">
+    <p>Reserva tu visita</p>
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contacto">
+      <div class="fila">
+        <input
+          class="usuario"
+          type="text"
+          formControlName="name"
+          placeholder="Nombre y apellidos"
+        />
+      </div>
+      <div class="fila">
+        <input
+          class="email"
+          type="email"
+          formControlName="email"
+          placeholder="Correo electronico"
+        />
+      </div>
+      <div class="fila">
+        <input
+          class="official_id"
+          type="text"
+          formControlName="officialId"
+          placeholder="Identificación oficial"
+        />
+      </div>
+      <div class="fila">
+        <input
+          class="calendar"
+          type="datetime-local"
+          formControlName="reservationDay"
+          placeholder="fecha"
+        />
+      </div>
+      <div class="fila flex-end">
+        <button type="submit">Enviar</button>
+      </div>
+    </form>
+  </div>
+</div>

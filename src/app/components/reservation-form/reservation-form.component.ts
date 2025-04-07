@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { ReservationServiceService } from '../../services/reservation-service.service';
-import { QrServiceService } from '../../services/qr-service.service';
-import { AlertServiceService } from '../../services/alert-service.service';
-import { generarErroresFormulario } from '../../utils/form-error.util';
-
+import { QrService } from '../../services/qr-service.service';
+import { AlertService } from '../../services/alert-service.service';
+import { generateFormErrors } from '../../utils/form-error.util';
 
 @Component({
   selector: 'app-reservation-form',
@@ -20,62 +19,63 @@ import { generarErroresFormulario } from '../../utils/form-error.util';
   styleUrl: './reservation-form.component.css',
 })
 export class ReservationFormComponent {
-  contactoForm: FormGroup;
+  contactForm: FormGroup;
 
-  condiciones: boolean = true;
   constructor(
     private fb: FormBuilder,
     private reservationService: ReservationServiceService,
-    private qrService: QrServiceService,
-    private alertService: AlertServiceService
+    private qrService: QrService,
+    private alertService: AlertService
   ) {
-    this.contactoForm = this.fb.group({
+    this.contactForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      OfficialId: ['', Validators.required],
+      officialId: ['', Validators.required],
       reservationDay: ['', Validators.required],
-      // condiciones: [false, Validators.requiredTrue] // si decides incluir el checkbox
     });
   }
-  ngOnInit() {}
 
-  onSubmit(): void {
-    if (this.contactoForm.valid) {
-      this.procesarReserva();
+  async onSubmit(): Promise<void> {
+    if (this.contactForm.valid) {
+      await this.processReservation();
     } else {
-      const errores = generarErroresFormulario(this.contactoForm);
-      this.alertService.mostrarErroresFormulario(errores);
+      const errors = generateFormErrors(this.contactForm);
+      this.alertService.showFormErrors(errors);
     }
   }
 
-  private async procesarReserva(): Promise<void> {
-    this.reservationService
-      .createReservation(this.contactoForm.value)
-      .subscribe(
-        async (res: any) => {
-          const qrUrl = await this.qrService.generarQRDataURL(res.qr);
-          const fecha = this.contactoForm.value.reservationDay
-            .replace('T', ' ')
-            .replace('Z', '');
-          const descargaCb = async () => {
-            const imagen = await this.qrService.generarImagenCanvas(
-              qrUrl,
-              fecha
-            );
-            const link = document.createElement('a');
-            link.href = imagen;
-            link.download = `reserva_${Date.now()}.png`;
-            link.click();
-          };
-          await this.alertService.mostrarConfirmacionConQR(
-            qrUrl,
-            this.contactoForm.value.email,
-            fecha,
-            descargaCb
-          );
-          this.contactoForm.reset();
-        },
-        () => this.alertService.mostrarErrorEnvio()
+  private async processReservation(): Promise<void> {
+    try {
+      const res = await firstValueFrom(
+        this.reservationService.createReservation(this.contactForm.value)
       );
+
+      const qrUrl = await this.qrService.generateQRDataURL(res.qr);
+      const formattedDate = this.contactForm.value.reservationDay
+        .replace('T', ' ')
+        .replace('Z', '');
+
+      const downloadCallback = async () => {
+        const image = await this.qrService.generateCanvasImage(
+          qrUrl,
+          formattedDate
+        );
+        const link = document.createElement('a');
+        link.href = image;
+        link.download = `reservation_${Date.now()}.png`;
+        link.click();
+      };
+
+      await this.alertService.showConfirmationWithQR(
+        qrUrl,
+        this.contactForm.value.email,
+        formattedDate,
+        downloadCallback
+      );
+
+      this.contactForm.reset();
+    } catch {
+      this.alertService.showSubmissionError();
+    }
   }
 }
