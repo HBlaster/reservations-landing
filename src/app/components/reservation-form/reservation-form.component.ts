@@ -50,8 +50,8 @@ export class ReservationFormComponent {
         this.reservationService.createReservation(this.contactForm.value)
       );
 
-      const qrUrl = await this.qrService.generateQRDataURL(res.qr);
-      const formattedDate = this.contactForm.value.reservationDay
+      const qrUrl = await this.qrService.generateQRDataURL(res.data.qrString);
+      const formattedDate = res.data.reservationDay
         .replace('T', ' ')
         .replace('Z', '');
 
