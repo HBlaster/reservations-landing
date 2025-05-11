@@ -10,15 +10,29 @@ import { ReservationServiceService } from '../../services/reservation-service.se
 import { QrService } from '../../services/qr-service.service';
 import { AlertService } from '../../services/alert-service.service';
 import { generateFormErrors } from '../../utils/form-error.util';
+import { CommonModule } from '@angular/common';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-reservation-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatNativeDateModule,
+  ],
   templateUrl: './reservation-form.component.html',
   styleUrl: './reservation-form.component.css',
 })
 export class ReservationFormComponent {
+  validDays: number[] = []; // días permitidos, ej. [1, 2, 3] para lunes-miércoles
+
   contactForm: FormGroup;
 
   constructor(
@@ -34,6 +48,36 @@ export class ReservationFormComponent {
       reservationDay: ['', Validators.required],
     });
   }
+
+  typeOfReservation: any;
+
+  ngOnInit() {
+    this.reservationService.getReservationConfig().subscribe((data: any) => {
+      if (data) {
+        console.log(data);
+        this.typeOfReservation = data.frequency;
+
+        const dayMap: any = {
+        SUN: 0,
+        MON: 1,
+        TUE: 2,
+        WED: 3,
+        THU: 4,
+        FRI: 5,
+        SAT: 6,
+      };
+
+      this.validDays = data.serviceDays.map((d: any) => dayMap[d.day]);
+      }
+    });
+  }
+
+  filterDates = (d: Date | null): boolean => {
+  const date = d || new Date();
+  const day = date.getDay(); // 0 (domingo) - 6 (sábado)
+  return this.validDays.includes(day); // permite solo si el día está en la lista
+};
+
 
   async onSubmit(): Promise<void> {
     if (this.contactForm.valid) {

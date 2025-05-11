@@ -14,4 +14,9 @@ export class ReservationServiceService {
     const url = `${environment.apiUrl}reservation`;
     return this.http.post<ReservationResponse>(url, oReservation);
   }
+
+  getReservationConfig(){
+    const url = `${environment.apiUrl}config-reservation/active-config`;
+    return this.http.get(url);
+  }
 }

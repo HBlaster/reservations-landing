@@ -493,12 +493,12 @@ input.official_id{
     padding-left: 2em;
 }
 
-input.calendar{
+/* input.calendar{
     background-image: url(assets/img/calendar-bronce.svg);
     background-repeat: no-repeat;
     background-position: 0 7px;
     padding-left: 2em;
-}
+} */
 
 button {
     border: none;
@@ -717,3 +717,12 @@ footer .copyright {
     align-items: center;
     display: none;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.cdk-overlay-container,
+.cdk-overlay-pane {
+  z-index: 2000 !important;
+  position: fixed !important;
+}
+
