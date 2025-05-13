@@ -19,4 +19,10 @@ export class ReservationServiceService {
     const url = `${environment.apiUrl}config-reservation/active-config`;
     return this.http.get(url);
   }
+
+  getAvailabilityByDate(date: string) {
+    const formattedDate = new Date(date).toISOString().split('T')[0];
+    const url = `${environment.apiUrl}config-reservation/availability/${formattedDate}`;
+    return this.http.get(url);
+  }
 }

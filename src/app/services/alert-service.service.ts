@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlertService {
-  constructor() {}
+  
+
+  constructor(private snackBar: MatSnackBar) {}
 
   showFormErrors(errors: string): void {
     Swal.fire({
@@ -50,4 +53,12 @@ export class AlertService {
       },
     });
   }
+
+  showWarning(message: string) {
+  this.snackBar.open(message, 'Cerrar', { duration: 3000, panelClass: ['warn-snackbar'] });
+}
+
+showError(message: string) {
+  this.snackBar.open(message, 'Cerrar', { duration: 3000, panelClass: ['error-snackbar'] });
+}
 }

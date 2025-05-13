@@ -31,8 +31,8 @@ import { MatNativeDateModule } from '@angular/material/core';
   styleUrl: './reservation-form.component.css',
 })
 export class ReservationFormComponent {
-  validDays: number[] = []; // días permitidos, ej. [1, 2, 3] para lunes-miércoles
-
+  validDays: number[] = [];
+  holidays: string[] = [];
   contactForm: FormGroup;
 
   constructor(
@@ -54,30 +54,41 @@ export class ReservationFormComponent {
   ngOnInit() {
     this.reservationService.getReservationConfig().subscribe((data: any) => {
       if (data) {
-        console.log(data);
         this.typeOfReservation = data.frequency;
 
         const dayMap: any = {
-        SUN: 0,
-        MON: 1,
-        TUE: 2,
-        WED: 3,
-        THU: 4,
-        FRI: 5,
-        SAT: 6,
-      };
+          SUN: 0,
+          MON: 1,
+          TUE: 2,
+          WED: 3,
+          THU: 4,
+          FRI: 5,
+          SAT: 6,
+        };
 
-      this.validDays = data.serviceDays.map((d: any) => dayMap[d.day]);
+        this.validDays = data.serviceDays.map((d: any) => dayMap[d.day]);
+
+        this.holidays = (data.holidays || [])
+          .filter((h: any) => !h.startTime && !h.endTime)
+          .map((h: any) => new Date(h.date).toDateString()); // usamos toDateString para comparar sin hora
+      }
+    });
+    this.contactForm.get('reservationDay')?.valueChanges.subscribe((date) => {
+      if (date) {
+        this.checkCapacity(date);
       }
     });
   }
 
   filterDates = (d: Date | null): boolean => {
-  const date = d || new Date();
-  const day = date.getDay(); // 0 (domingo) - 6 (sábado)
-  return this.validDays.includes(day); // permite solo si el día está en la lista
-};
+    const date = d || new Date();
+    const day = date.getDay();
 
+    const isValidDay = this.validDays.includes(day);
+    const isHoliday = this.holidays.includes(date.toDateString());
+
+    return isValidDay && !isHoliday;
+  };
 
   async onSubmit(): Promise<void> {
     if (this.contactForm.valid) {
@@ -121,5 +132,20 @@ export class ReservationFormComponent {
     } catch {
       this.alertService.showSubmissionError();
     }
+  }
+
+  checkCapacity(date: Date) {
+    const formattedDate = date.toISOString().split('T')[0]; 
+    this.reservationService.getAvailabilityByDate(formattedDate).subscribe({
+      next: (res:any) => {
+        if (res.capacity <= 0) {
+          this.alertService.showWarning("No hay lugares disponibles ese día.");
+          this.contactForm.get('reservationDay')?.setValue(null); // limpia selección
+        }
+      },
+      error: () => {
+        this.alertService.showError("No se pudo verificar la disponibilidad.");
+      }
+    });
   }
 }
