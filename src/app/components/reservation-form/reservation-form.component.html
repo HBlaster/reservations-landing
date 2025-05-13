@@ -1,12 +1,29 @@
 <div class="fila">
   <div class="col-100 flex-column-center">
     <p>Reserva tu visita</p>
+
     <form
       [formGroup]="contactForm"
       (ngSubmit)="onSubmit()"
       class="contacto"
       *ngIf="typeOfReservation === 'daily'"
     >
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Fecha</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [matDatepickerFilter]="filterDates"
+          formControlName="reservationDay"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker touchUi="true"></mat-datepicker>
+      </mat-form-field>
+      <div class="col-100 flex-column-center" *ngIf="capacityRemaining != undefined">
+        <p>Lugares disponibles</p>
+        <p>{{ capacityRemaining }}</p>
+      </div>
       <div class="fila">
         <input
           class="usuario"
@@ -31,19 +48,6 @@
           placeholder="Identificación oficial"
         />
       </div>
-      <mat-form-field appearance="outline" style="width: 100%">
-        <mat-label>Fecha</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker"
-          [matDatepickerFilter]="filterDates"
-          formControlName="reservationDay"
-          required
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker touchUi="true"></mat-datepicker>
-      </mat-form-field>
-
       <div class="fila flex-end">
         <button type="submit">Enviar</button>
       </div>

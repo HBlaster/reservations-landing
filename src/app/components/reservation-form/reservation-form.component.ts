@@ -34,6 +34,7 @@ export class ReservationFormComponent {
   validDays: number[] = [];
   holidays: string[] = [];
   contactForm: FormGroup;
+  capacityRemaining: number | undefined = undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -138,6 +139,8 @@ export class ReservationFormComponent {
     const formattedDate = date.toISOString().split('T')[0]; 
     this.reservationService.getAvailabilityByDate(formattedDate).subscribe({
       next: (res:any) => {
+        console.log(res);
+        this.capacityRemaining = res.capacity;
         if (res.capacity <= 0) {
           this.alertService.showWarning("No hay lugares disponibles ese día.");
           this.contactForm.get('reservationDay')?.setValue(null); // limpia selección
