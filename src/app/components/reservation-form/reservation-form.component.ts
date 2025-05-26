@@ -54,9 +54,8 @@ export class ReservationFormComponent {
 
   ngOnInit() {
     this.reservationService.getReservationConfig().subscribe((data: any) => {
-      if (data) {
+      if (data.frequency === 'daily') {
         this.typeOfReservation = data.frequency;
-
         const dayMap: any = {
           SUN: 0,
           MON: 1,
@@ -72,6 +71,8 @@ export class ReservationFormComponent {
         this.holidays = (data.holidays || [])
           .filter((h: any) => !h.startTime && !h.endTime)
           .map((h: any) => new Date(h.date).toDateString()); // usamos toDateString para comparar sin hora
+      } else if (data.frequency === 'interval') {
+        this.typeOfReservation = data.frequency;
       }
     });
     this.contactForm.get('reservationDay')?.valueChanges.subscribe((date) => {
