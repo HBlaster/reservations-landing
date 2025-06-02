@@ -38,7 +38,7 @@ export class ReservationFormComponent {
   holidays: string[] = [];
   contactForm: FormGroup;
   capacityRemaining: number | undefined = undefined;
-  // intervalCapacity: any;
+  intervalCapacity: any;
 
   constructor(
     private fb: FormBuilder,
@@ -135,6 +135,8 @@ export class ReservationFormComponent {
         link.click();
       };
 
+      
+
       await this.alertService.showConfirmationWithQR(
         qrUrl,
         this.contactForm.value.email,
@@ -143,6 +145,7 @@ export class ReservationFormComponent {
       );
 
       this.contactForm.reset();
+      this.capacityRemaining = undefined
     } catch {
       this.alertService.showSubmissionError();
     }
@@ -155,20 +158,26 @@ export class ReservationFormComponent {
       .subscribe({
         next: (res: any) => {
           console.log('res checkCapacity: ', res);
-          // this.intervalCapacity= '';
-          // this.intervalCapacity = Array.isArray(res.capacity)
-          //   ? res.capacity
-          //   : [];
-          this.capacityRemaining = res.capacity;
-          // console.log('capacity length: ', this.intervalCapacity.length);
-
-          // if (this.capacityRemaining.length === 0) {
           if (res.capacity < 0) {
             this.alertService.showWarning(
               'No hay lugares disponibles ese día.'
             );
             this.contactForm.get('reservationDay')?.setValue(null);
+            return;
           }
+          if (this.typeOfReservation === 'interval') {
+            this.intervalCapacity = '';
+            this.intervalCapacity = Array.isArray(res.capacity)
+              ? res.capacity
+              : [];
+
+            return;
+          }
+
+          this.capacityRemaining = res.capacity;
+          // console.log('capacity length: ', this.intervalCapacity.length);
+
+          // if (this.capacityRemaining.length === 0) {
         },
         error: () => {
           this.alertService.showError(
