@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
@@ -26,15 +27,18 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatInputModule,
     MatFormFieldModule,
     MatNativeDateModule,
+    MatSelectModule,
   ],
   templateUrl: './reservation-form.component.html',
   styleUrl: './reservation-form.component.css',
 })
 export class ReservationFormComponent {
+  selected = 'option2';
   validDays: number[] = [];
   holidays: string[] = [];
   contactForm: FormGroup;
   capacityRemaining: number | undefined = undefined;
+  intervalCapacity: any;
 
   constructor(
     private fb: FormBuilder,
@@ -79,7 +83,7 @@ export class ReservationFormComponent {
           .filter((h: any) => !h.startTime && !h.endTime)
           .map((h: any) => {
             const [year, month, day] = h.date.split('-').map(Number);
-            return new Date(year, month - 1, day).toDateString(); 
+            return new Date(year, month - 1, day).toDateString();
           });
       }
     });
@@ -146,18 +150,29 @@ export class ReservationFormComponent {
 
   checkCapacity(date: Date) {
     const formattedDate = date.toISOString().split('T')[0];
-    this.reservationService.getAvailabilityByDate(formattedDate).subscribe({
-      next: (res: any) => {
-        console.log('res checkCapacity: ', res);
-        this.capacityRemaining = res.capacity;
-        if (res.capacity <= 0) {
-          this.alertService.showWarning('No hay lugares disponibles ese día.');
-          this.contactForm.get('reservationDay')?.setValue(null);
-        }
-      },
-      error: () => {
-        this.alertService.showError('No se pudo verificar la disponibilidad.');
-      },
-    });
+    this.reservationService
+      .getAvailabilityByDate(formattedDate, this.typeOfReservation)
+      .subscribe({
+        next: (res: any) => {
+          console.log('res checkCapacity: ', res);
+          this.intervalCapacity= '';
+          this.intervalCapacity = Array.isArray(res.capacity)
+            ? res.capacity
+            : [];
+          console.log('capacity length: ', this.intervalCapacity.length);
+
+          if (this.intervalCapacity.length === 0) {
+            this.alertService.showWarning(
+              'No hay lugares disponibles ese día.'
+            );
+            this.contactForm.get('reservationDay')?.setValue(null);
+          }
+        },
+        error: () => {
+          this.alertService.showError(
+            'No se pudo verificar la disponibilidad.'
+          );
+        },
+      });
   }
 }

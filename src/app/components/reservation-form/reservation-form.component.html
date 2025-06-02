@@ -20,10 +20,7 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker touchUi="true"></mat-datepicker>
       </mat-form-field>
-      <div class="col-100 flex-column-center" *ngIf="capacityRemaining != undefined">
-        <p>Lugares disponibles</p>
-        <p>{{ capacityRemaining }}</p>
-      </div>
+
       <div class="fila">
         <input
           class="usuario"
@@ -58,7 +55,7 @@
       class="contacto"
       *ngIf="typeOfReservation === 'interval'"
     >
-    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-form-field appearance="outline" style="width: 100%">
         <mat-label>Fecha</mat-label>
         <input
           matInput
@@ -70,6 +67,23 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker touchUi="true"></mat-datepicker>
       </mat-form-field>
+      <div
+        class="col-100 flex-column-center"
+        *ngIf="intervalCapacity?.length > 0"
+      >
+        <p>Citas disponibles</p>
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Seleccione un horario</mat-label>
+          <mat-select [(value)]="selected">
+            <mat-option>None</mat-option>
+            <mat-option
+              *ngFor="let option of intervalCapacity"
+              [value]="option.id"
+              >{{ option.startTime }} - {{ option.endTime }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
       <div class="fila">
         <input
           class="usuario"
