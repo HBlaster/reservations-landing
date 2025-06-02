@@ -20,7 +20,10 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker touchUi="true"></mat-datepicker>
       </mat-form-field>
-
+      <div class="col-100 flex-column-center" *ngIf="capacityRemaining != undefined">
+        <p>Lugares disponibles</p>
+        <p>{{ capacityRemaining }}</p>
+      </div>
       <div class="fila">
         <input
           class="usuario"
@@ -49,7 +52,7 @@
         <button type="submit">Enviar</button>
       </div>
     </form>
-    <form
+    <!-- <form
       [formGroup]="contactForm"
       (ngSubmit)="onSubmit()"
       class="contacto"
@@ -103,6 +106,6 @@
       <div class="fila flex-end">
         <button type="submit">Enviar</button>
       </div>
-    </form>
+    </form> -->
   </div>
 </div>
