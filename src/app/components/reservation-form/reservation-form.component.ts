@@ -54,17 +54,18 @@ export class ReservationFormComponent {
 
   ngOnInit() {
     this.reservationService.getReservationConfig().subscribe((data: any) => {
+      let dayMap: any = {
+        SUN: 0,
+        MON: 1,
+        TUE: 2,
+        WED: 3,
+        THU: 4,
+        FRI: 5,
+        SAT: 6,
+      };
+
       if (data.frequency === 'daily') {
         this.typeOfReservation = data.frequency;
-        const dayMap: any = {
-          SUN: 0,
-          MON: 1,
-          TUE: 2,
-          WED: 3,
-          THU: 4,
-          FRI: 5,
-          SAT: 6,
-        };
 
         this.validDays = data.serviceDays.map((d: any) => dayMap[d.day]);
 
@@ -73,6 +74,13 @@ export class ReservationFormComponent {
           .map((h: any) => new Date(h.date).toDateString()); // usamos toDateString para comparar sin hora
       } else if (data.frequency === 'interval') {
         this.typeOfReservation = data.frequency;
+        this.validDays = data.serviceDays.map((d: any) => dayMap[d.day]);
+        this.holidays = (data.holidays || [])
+          .filter((h: any) => !h.startTime && !h.endTime)
+          .map((h: any) => {
+            const [year, month, day] = h.date.split('-').map(Number);
+            return new Date(year, month - 1, day).toDateString(); 
+          });
       }
     });
     this.contactForm.get('reservationDay')?.valueChanges.subscribe((date) => {
@@ -140,11 +148,11 @@ export class ReservationFormComponent {
     const formattedDate = date.toISOString().split('T')[0];
     this.reservationService.getAvailabilityByDate(formattedDate).subscribe({
       next: (res: any) => {
-        console.log("res checkCapacity: ",res);
+        console.log('res checkCapacity: ', res);
         this.capacityRemaining = res.capacity;
         if (res.capacity <= 0) {
           this.alertService.showWarning('No hay lugares disponibles ese día.');
-          this.contactForm.get('reservationDay')?.setValue(null); 
+          this.contactForm.get('reservationDay')?.setValue(null);
         }
       },
       error: () => {
