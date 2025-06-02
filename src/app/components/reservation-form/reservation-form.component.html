@@ -58,12 +58,32 @@
       class="contacto"
       *ngIf="typeOfReservation === 'interval'"
     >
+    <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Fecha</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [matDatepickerFilter]="filterDates"
+          formControlName="reservationDay"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker touchUi="true"></mat-datepicker>
+      </mat-form-field>
       <div class="fila">
         <input
           class="usuario"
           type="text"
           formControlName="name"
           placeholder="Nombre y apellidos"
+        />
+      </div>
+      <div class="fila">
+        <input
+          class="email"
+          type="email"
+          formControlName="email"
+          placeholder="Correo electronico"
         />
       </div>
       <div class="fila flex-end">
