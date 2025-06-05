@@ -3,10 +3,10 @@
     <p>Reserva tu visita</p>
 
     <form
+      *ngIf="typeOfReservation === 'daily'"
       [formGroup]="contactForm"
       (ngSubmit)="onSubmit()"
       class="contacto"
-      *ngIf="typeOfReservation === 'daily'"
     >
       <mat-form-field appearance="outline" style="width: 100%">
         <mat-label>Fecha</mat-label>
@@ -53,7 +53,7 @@
       </div>
     </form>
     <form
-      [formGroup]="contactForm"
+      [formGroup]="IntervalForm"
       (ngSubmit)="onSubmit()"
       class="contacto"
       *ngIf="typeOfReservation === 'interval'"
@@ -64,7 +64,7 @@
           matInput
           [matDatepicker]="picker"
           [matDatepickerFilter]="filterDates"
-          formControlName="reservationDay"
+          formControlName="reservationIntervalDay"
           required
         />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -77,7 +77,7 @@
         <p>Citas disponibles</p>
         <mat-form-field appearance="outline" style="width: 100%">
           <mat-label>Seleccione un horario</mat-label>
-          <mat-select [(value)]="selected">
+          <mat-select formControlName="idReservation">
             <mat-option>None</mat-option>
             <mat-option
               *ngFor="let option of intervalCapacity"

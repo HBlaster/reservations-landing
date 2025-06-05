@@ -37,6 +37,7 @@ export class ReservationFormComponent {
   validDays: number[] = [];
   holidays: string[] = [];
   contactForm: FormGroup;
+  IntervalForm: FormGroup;
   capacityRemaining: number | undefined = undefined;
   intervalCapacity: any;
 
@@ -51,6 +52,13 @@ export class ReservationFormComponent {
       email: ['', [Validators.required, Validators.email]],
       officialId: ['', Validators.required],
       reservationDay: ['', Validators.required],
+    });
+
+    this.IntervalForm = this.fb.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      idReservation: [0, Validators.required],
+      reservationIntervalDay: ['', Validators.required],
     });
   }
 
@@ -92,6 +100,13 @@ export class ReservationFormComponent {
         this.checkCapacity(date);
       }
     });
+    this.IntervalForm.get('reservationIntervalDay')?.valueChanges.subscribe(
+      (date) => {
+        if (date) {
+          this.checkCapacity(date);
+        }
+      }
+    );
   }
 
   filterDates = (d: Date | null): boolean => {
@@ -105,15 +120,25 @@ export class ReservationFormComponent {
   };
 
   async onSubmit(): Promise<void> {
-    if (this.contactForm.valid) {
-      await this.processReservation();
-    } else {
-      const errors = generateFormErrors(this.contactForm);
-      this.alertService.showFormErrors(errors);
+    if (this.typeOfReservation === 'daily') {
+      if (this.contactForm.valid) {
+        await this.processDailyReservation();
+      } else {
+        const errors = generateFormErrors(this.contactForm);
+        this.alertService.showFormErrors(errors);
+      }
+    }
+    if (this.typeOfReservation === 'interval') {
+      if (this.IntervalForm.valid) {
+        console.log('IntervalForm: ', this.IntervalForm.value);
+      } else {
+        const errors = generateFormErrors(this.IntervalForm);
+        this.alertService.showFormErrors(errors);
+      }
     }
   }
 
-  private async processReservation(): Promise<void> {
+  private async processDailyReservation(): Promise<void> {
     try {
       const res = await firstValueFrom(
         this.reservationService.createReservation(this.contactForm.value)
@@ -135,8 +160,6 @@ export class ReservationFormComponent {
         link.click();
       };
 
-      
-
       await this.alertService.showConfirmationWithQR(
         qrUrl,
         this.contactForm.value.email,
@@ -145,7 +168,7 @@ export class ReservationFormComponent {
       );
 
       this.contactForm.reset();
-      this.capacityRemaining = undefined
+      this.capacityRemaining = undefined;
     } catch {
       this.alertService.showSubmissionError();
     }
