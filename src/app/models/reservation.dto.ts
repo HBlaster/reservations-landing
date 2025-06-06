@@ -4,3 +4,10 @@ export interface ReservationDto {
   officialId: string;
   reservationDay: string; // YYYY-MM-DD
 }
+
+export interface IntervalReservationDto extends ReservationDto {
+   name: string;
+  email: string;
+  idReservation: number;
+  reservationIntervalDay: string;
+}

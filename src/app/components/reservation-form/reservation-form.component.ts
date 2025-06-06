@@ -131,6 +131,16 @@ export class ReservationFormComponent {
     if (this.typeOfReservation === 'interval') {
       if (this.IntervalForm.valid) {
         console.log('IntervalForm: ', this.IntervalForm.value);
+        this.reservationService
+          .createIntervalReservation(this.IntervalForm.value)
+          .subscribe({
+            next: (res) => {
+              console.log('Interval reservation response: ', res);
+            },
+            error: (err) => {
+              console.error('Error creating interval reservation: ', err);
+            }
+          });
       } else {
         const errors = generateFormErrors(this.IntervalForm);
         this.alertService.showFormErrors(errors);

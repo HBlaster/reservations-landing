@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ReservationDto } from '../models/reservation.dto';
+import { ReservationDto, IntervalReservationDto } from '../models/reservation.dto';
 import { HttpClient } from '@angular/common/http';
 import { ReservationResponse } from '../models/reservation.response';
 import { environment } from '../../environments/environment';
@@ -17,6 +17,11 @@ export class ReservationServiceService {
   createReservation(oReservation: ReservationDto) {
     const url = `${environment.apiUrl}reservation`;
     return this.http.post<ReservationResponse>(url, oReservation);
+  }
+
+  createIntervalReservation(oIntervalReservation: IntervalReservationDto){
+    const url = `${environment.apiUrl}reservation/interval`;
+    return this.http.post<ReservationResponse>(url, oIntervalReservation);
   }
 
   generateDynamicForm(frequency:string): FormGroup {
