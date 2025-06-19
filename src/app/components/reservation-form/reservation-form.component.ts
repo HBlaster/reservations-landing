@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reservation-form',
@@ -134,8 +135,17 @@ export class ReservationFormComponent {
         this.reservationService
           .createIntervalReservation(this.IntervalForm.value)
           .subscribe({
-            next: (res) => {
+            next: (res:any) => {
               console.log('Interval reservation response: ', res);
+              if(res.status === 'success') {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Reservación creada',
+                  text: 'Su reservación ha sido creada exitosamente.',
+                });
+                this.IntervalForm.reset();
+                this.capacityRemaining = undefined;
+              }
             },
             error: (err) => {
               console.error('Error creating interval reservation: ', err);
