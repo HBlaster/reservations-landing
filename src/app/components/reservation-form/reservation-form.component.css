@@ -20,15 +20,19 @@ form.contacto .fila{
 
 input {
     border: none;
-    border-bottom: 1.5px solid #a97c50;
+    border-bottom: 1.5px solid #575757;
     font-size: 1rem;
     padding: 0.5em 1em;
     width: 100%;
 }
 
+input.datepicker {
+    padding: 0 0;
+}
+
 input:focus {
     outline: none;
-    border-bottom: 1.5px solid #643e18;
+    border-bottom: 1.5px solid #000000;
 }
 input.usuario {
     background-image: url(../../../assets/img/user.svg);
@@ -54,7 +58,7 @@ input.official_id{
 
 button {
     border: none;
-    background-color:#a97c50;
+    background-color:#575757;
     color: white;
     font-size: 1rem;
     font-weight: normal;
@@ -64,7 +68,7 @@ button {
     transition: all ease-in-out 400ms;
 }
 button:hover{
-    background-color: #7c4e1f ;
+    background-color: #000000 ;
     
 }
 
