@@ -129,17 +129,37 @@ export class ReservationFormComponent {
   async onSubmit(): Promise<void> {
     if (this.typeOfReservation === 'daily') {
       if (this.contactForm.valid) {
-        await this.processDailyReservation();
+        const recaptchaToken = this.contactForm.get('recaptcha')?.value;
+
+        // Preparar objeto con recaptchaToken incluido
+        const reservationData = {
+          ...this.contactForm.value,
+          recaptchaToken: recaptchaToken,
+        };
+
+        console.log('Datos daily reservation con reCAPTCHA:', reservationData);
+
+        // Modifica processDailyReservation para que acepte reservationData si es necesario
+        await this.processDailyReservation(reservationData);
       } else {
         const errors = generateFormErrors(this.contactForm);
         this.alertService.showFormErrors(errors);
       }
     }
+
     if (this.typeOfReservation === 'interval') {
       if (this.IntervalForm.valid) {
-        console.log('IntervalForm: ', this.IntervalForm.value);
+        const recaptchaToken = this.IntervalForm.get('recaptcha')?.value;
+
+        const reservationData = {
+          ...this.IntervalForm.value,
+          recaptchaToken: recaptchaToken,
+        };
+
+        console.log('IntervalForm con reCAPTCHA:', reservationData);
+
         this.reservationService
-          .createIntervalReservation(this.IntervalForm.value)
+          .createIntervalReservation(reservationData)
           .subscribe({
             next: (res: any) => {
               console.log('Interval reservation response: ', res);
@@ -164,10 +184,10 @@ export class ReservationFormComponent {
     }
   }
 
-  private async processDailyReservation(): Promise<void> {
+  private async processDailyReservation(reservationData: any): Promise<void> {
     try {
       const res = await firstValueFrom(
-        this.reservationService.createReservation(this.contactForm.value)
+        this.reservationService.createReservation(reservationData)
       );
 
       const qrUrl = await this.qrService.generateQRDataURL(res.data.qrString);
@@ -188,7 +208,7 @@ export class ReservationFormComponent {
 
       await this.alertService.showConfirmationWithQR(
         qrUrl,
-        this.contactForm.value.email,
+        reservationData.email,
         formattedDate,
         downloadCallback
       );
