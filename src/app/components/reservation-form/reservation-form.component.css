@@ -1,0 +1,88 @@
+/* formulario contacto  */
+form.contacto{
+    width: 50%;
+}
+
+@media (max-width: 720px) {
+    form.contacto{
+        width: 75%;
+    }
+}
+@media (max-width: 440px) {
+    form.contacto{
+        width: 100%;
+    }
+}
+
+form.contacto .fila{
+    padding: 0.8rem;
+}
+
+input {
+    border: none;
+    border-bottom: 1.5px solid #a97c50;
+    font-size: 1rem;
+    padding: 0.5em 1em;
+    width: 100%;
+}
+
+input:focus {
+    outline: none;
+    border-bottom: 1.5px solid #643e18;
+}
+input.usuario {
+    background-image: url(../../../assets/img/user.svg);
+    background-repeat: no-repeat;
+    background-position: 0 7px;
+    padding-left: 2em;
+}
+
+input.email {
+    background-image: url(../../../assets/img/mail-bronce-nuevo.svg);
+    background-repeat: no-repeat;
+    background-position: 0 7px;
+    padding-left: 2em;
+}
+
+input.official_id{
+    background-image: url(../../../assets/img/id-bronce-ajustado.svg);
+    background-repeat: no-repeat;
+    background-position: 0 7px;
+    padding-left: 2em;
+}
+
+
+button {
+    border: none;
+    background-color:#a97c50;
+    color: white;
+    font-size: 1rem;
+    font-weight: normal;
+    padding: 0.5em 1em;
+    border-radius: 0.3em;
+    cursor: pointer;
+    transition: all ease-in-out 400ms;
+}
+button:hover{
+    background-color: #7c4e1f ;
+    
+}
+
+input[type="checkbox"]{
+    display: none;
+}
+
+input[type="checkbox"] + label::before{
+    content: url(../../../assets/img/square.svg);
+    position: relative;
+    top: 5px;
+    padding-right: 5px;
+}
+input[type="checkbox"]:checked + label::before{
+    content: url(../../../assets/img/check-square.svg);
+    position: relative;
+    top: 5px;
+    padding-right: 5px;
+}
+
+
