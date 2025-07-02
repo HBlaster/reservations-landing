@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -29,6 +30,8 @@ import Swal from 'sweetalert2';
     MatFormFieldModule,
     MatNativeDateModule,
     MatSelectModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
   ],
   templateUrl: './reservation-form.component.html',
   styleUrl: './reservation-form.component.css',
@@ -53,6 +56,7 @@ export class ReservationFormComponent {
       email: ['', [Validators.required, Validators.email]],
       officialId: ['', Validators.required],
       reservationDay: ['', Validators.required],
+      recaptcha: ['', Validators.required],
     });
 
     this.IntervalForm = this.fb.group({
@@ -60,6 +64,7 @@ export class ReservationFormComponent {
       email: ['', [Validators.required, Validators.email]],
       idReservation: [0, Validators.required],
       reservationIntervalDay: ['', Validators.required],
+      recaptcha: ['', Validators.required],
     });
   }
 
@@ -67,6 +72,7 @@ export class ReservationFormComponent {
 
   ngOnInit() {
     this.reservationService.getReservationConfig().subscribe((data: any) => {
+      console.log('Data: ', data);
       let dayMap: any = {
         SUN: 0,
         MON: 1,
@@ -135,9 +141,9 @@ export class ReservationFormComponent {
         this.reservationService
           .createIntervalReservation(this.IntervalForm.value)
           .subscribe({
-            next: (res:any) => {
+            next: (res: any) => {
               console.log('Interval reservation response: ', res);
-              if(res.status === 'success') {
+              if (res.status === 'success') {
                 Swal.fire({
                   icon: 'success',
                   title: 'Reservación creada',
@@ -149,7 +155,7 @@ export class ReservationFormComponent {
             },
             error: (err) => {
               console.error('Error creating interval reservation: ', err);
-            }
+            },
           });
       } else {
         const errors = generateFormErrors(this.IntervalForm);
@@ -228,5 +234,12 @@ export class ReservationFormComponent {
           );
         },
       });
+  }
+  onCaptchaResolved(captchaResponse: string | null) {
+    if (captchaResponse) {
+      console.log('CAPTCHA resuelto con respuesta:', captchaResponse);
+    } else {
+      console.log('CAPTCHA no completado');
+    }
   }
 }

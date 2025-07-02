@@ -48,7 +48,10 @@
           placeholder="Identificación oficial"
         />
       </div>
-      <div class="fila flex-end">
+      <div class="fila flex-column-center">
+        <re-captcha formControlName="recaptcha" siteKey="6LcYh3QrAAAAAPyke5CVEBAwk6FRsJ3lGXkD-aEW" (resolved)="onCaptchaResolved($event)"></re-captcha>
+      </div>
+      <div class="fila flex-column-center">
         <button type="submit">Enviar</button>
       </div>
     </form>
@@ -103,7 +106,10 @@
           placeholder="Correo electronico"
         />
       </div>
-      <div class="fila flex-end">
+      <div class="fila flex-column-center">
+        <re-captcha formControlName="recaptcha" siteKey="6LcYh3QrAAAAAPyke5CVEBAwk6FRsJ3lGXkD-aEW" (resolved)="onCaptchaResolved($event)"></re-captcha>
+      </div>
+      <div class="fila flex-column-center">
         <button type="submit">Enviar</button>
       </div>
     </form>
